@@ -678,6 +678,9 @@
                 width: 100%;
             }
         }
+
+        /* AUTHENTICATION */
+        #loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#0f766e,#134e4a);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}.login-card{width:min(420px,100%);background:#fff;border-radius:22px;padding:32px;box-shadow:0 25px 70px rgba(0,0,0,.25)}.login-card h1{text-align:center;color:#0f766e;margin-bottom:8px}.login-card p{text-align:center;color:#6b7280;margin-bottom:24px}.login-card input,.login-card select{width:100%;padding:13px;margin:8px 0;border:1px solid #d1d5db;border-radius:10px;font-size:15px}.login-card button{width:100%;padding:13px;border:0;border-radius:10px;background:#0f766e;color:#fff;font-size:16px;font-weight:bold;cursor:pointer;margin-top:8px}.login-error{color:#dc2626;text-align:center;min-height:20px;margin-top:10px}.demo-box{margin-top:18px;padding:12px;background:#f0fdfa;border-radius:10px;font-size:13px;color:#115e59}.hidden{display:none!important}.role-badge{font-size:11px;background:#ccfbf1;color:#0f766e;padding:4px 8px;border-radius:20px;font-weight:bold}.user-readonly .btn-primary,.user-readonly button[onclick*="delete"],.user-readonly button[onclick*="open"]{display:none!important}.auth-switch{text-align:center;margin-top:16px;color:#0f766e;cursor:pointer;font-weight:bold}.auth-message{color:#15803d;text-align:center;min-height:20px;margin-top:10px}.login-card .auth-switch{user-select:none}.login-card .auth-switch:hover{text-decoration:underline}
     </style>
 </head>
 
@@ -741,6 +744,48 @@
         </form>
     </div>
 </section>
+
+
+<div id="loginScreen">
+ <div class="login-card">
+  <h1>🏥 MediCare</h1>
+  <p id="authTitle">Hospital Management System</p>
+
+  <form id="loginForm">
+    <input id="loginUsername" placeholder="Username" required autocomplete="username">
+    <input id="loginPassword" type="password" placeholder="Password" required autocomplete="current-password">
+    <select id="loginRole" required>
+      <option value="admin">Admin</option>
+      <option value="user">User / Reception</option>
+    </select>
+    <button type="submit">Login</button>
+  </form>
+
+  <form id="registerForm" class="hidden">
+    <input id="regName" placeholder="Full Name" required autocomplete="name">
+    <input id="regUsername" placeholder="Choose Username" required autocomplete="username">
+    <input id="regPassword" type="password" placeholder="Create Password (min. 6 characters)" minlength="6" required autocomplete="new-password">
+    <input id="regConfirmPassword" type="password" placeholder="Confirm Password" required autocomplete="new-password">
+    <button type="submit">Create User Account</button>
+  </form>
+
+  <form id="adminSetupForm" class="hidden">
+    <input id="adminName" placeholder="Admin Full Name" required autocomplete="name">
+    <input id="adminUsername" placeholder="Create Admin Username" required autocomplete="username">
+    <input id="adminPassword" type="password" placeholder="Create Admin Password (min. 6 characters)" minlength="6" required autocomplete="new-password">
+    <input id="adminConfirmPassword" type="password" placeholder="Confirm Admin Password" required autocomplete="new-password">
+    <button type="submit">Create Admin Account</button>
+  </form>
+
+  <div id="loginError" class="login-error"></div>
+  <div id="authMessage" class="auth-message"></div>
+  <div id="authSwitch" class="auth-switch" onclick="toggleAuthMode()">New user? Register here</div>
+  <div id="adminSetupSwitch" class="auth-switch hidden" onclick="showAdminSetup()">Create the first Admin account</div>
+  <div id="authInfo" class="demo-box"><b>First-time setup:</b><br>Create your Admin account, then use it to manage the hospital system.
+    <br><small>No demo username or password is included.</small>
+  </div>
+ </div>
+</div>
 
 
 <!-- SIDEBAR -->
@@ -815,11 +860,17 @@
             <div class="notification" onclick="showNotification()">🔔</div>
 
             <div class="profile">
+<<<<<<< HEAD
                 <div class="avatar" id="profileAvatar">--</div>
                 <span id="profileName">Guest</span>
                 <span id="profileRole" style="font-size:12px;color:#64748b;">
                     </span>
                 <button class="logout-btn" onclick="logoutUser()">Logout</button>
+=======
+                <div class="avatar" id="profileAvatar">AD</div>
+                <span id="profileName">Admin</span> <span class="role-badge" id="roleBadge">ADMIN</span>
+                <button onclick="logout()" style="border:0;background:#fee2e2;color:#b91c1c;padding:8px 10px;border-radius:8px;cursor:pointer">Logout</button>
+>>>>>>> 96e8ee07ec7e2ed0c179ee1049df1d15b1fbe81e
             </div>
         </div>
 
@@ -880,6 +931,23 @@
 
             </div>
 
+
+
+            <div id="adminStatsSection">
+            <div class="panel" style="margin-bottom:25px">
+                <div class="panel-title"><h2>Admin Dashboard Statistics</h2><span id="adminStatsDate"></span></div>
+                <div class="stats">
+                    <div class="stat-card"><p>Admitted Patients</p><h3 id="admittedPatients">0</h3><p>Currently admitted</p></div>
+                    <div class="stat-card"><p>Available Doctors</p><h3 id="availableDoctors">0</h3><p>Ready for appointments</p></div>
+                    <div class="stat-card"><p>Pending Bills</p><h3 id="pendingBills">0</h3><p>Invoices awaiting payment</p></div>
+                    <div class="stat-card"><p>Medicine Stock</p><h3 id="medicineStock">0</h3><p>Total units in pharmacy</p></div>
+                </div>
+                <div class="grid-2">
+                    <div class="panel"><div class="panel-title"><h2>Revenue Summary</h2></div><p><strong>Paid Revenue:</strong> <span id="paidRevenue">₹0</span></p><br><p><strong>Outstanding:</strong> <span id="outstandingRevenue">₹0</span></p><br><p><strong>Collection Rate:</strong> <span id="collectionRate">0%</span></p></div>
+                    <div class="panel"><div class="panel-title"><h2>Hospital Overview</h2></div><p>Active Patients: <strong id="activePatients">0</strong></p><br><p>Today's Appointments: <strong id="todayAppointments">0</strong></p><br><p>Low Stock Medicines: <strong id="lowStockMedicines">0</strong></p></div>
+                </div>
+            </div>
+            </div>
 
             <div class="grid-2">
 
@@ -1675,6 +1743,184 @@
 
 <script>
 
+
+/* AUTHENTICATION & ROLE ACCESS */
+let currentUser = null;
+
+function readStoredUsers(){
+    try { return JSON.parse(localStorage.getItem('medicareUsers') || '{}') || {}; }
+    catch(e) { return {}; }
+}
+function saveStoredUsers(users){ localStorage.setItem('medicareUsers', JSON.stringify(users)); }
+function getUsers(){ return readStoredUsers(); }
+function removeLegacyDemoAccounts(){
+    const users=readStoredUsers();
+    let changed=false;
+    if(users.admin && users.admin.password==='admin123'){ delete users.admin; changed=true; }
+    if(users.user && users.user.password==='user123'){ delete users.user; changed=true; }
+    if(changed) saveStoredUsers(users);
+    const saved=JSON.parse(localStorage.getItem('medicareSession')||'null');
+    if(saved && ((saved.username==='admin' && saved.role==='admin') || (saved.username==='user' && saved.role==='user'))){
+        localStorage.removeItem('medicareSession');
+    }
+}
+function hasAdminAccount(){ return Object.values(getUsers()).some(u => u.role === 'admin'); }
+
+function startSession(user){
+    currentUser = {username:user.username, name:user.name, role:user.role};
+    localStorage.setItem('medicareSession', JSON.stringify(currentUser));
+    applyUserRole();
+    document.getElementById('loginScreen').classList.add('hidden');
+}
+
+function applyUserRole(){
+    if(!currentUser) return;
+    document.getElementById('profileName').textContent=currentUser.name;
+    document.getElementById('profileAvatar').textContent=currentUser.role==='admin' ? 'AD' : 'US';
+    document.getElementById('roleBadge').textContent=currentUser.role.toUpperCase();
+    document.body.classList.toggle('user-readonly',currentUser.role==='user');
+    const adminStats=document.getElementById('adminStatsSection');
+    if(adminStats) adminStats.style.display=currentUser.role==='admin'?'block':'none';
+    document.querySelectorAll('.menu-item').forEach(i=>{
+        const t=i.innerText.trim().toLowerCase();
+        if(currentUser.role==='user' && ['billing','pharmacy','staff'].includes(t)) i.style.display='none';
+        else i.style.display='flex';
+    });
+}
+
+function logout(){
+    localStorage.removeItem('medicareSession');
+    currentUser=null;
+    document.getElementById('loginForm').reset();
+    document.getElementById('registerForm').reset();
+    document.getElementById('adminSetupForm').reset();
+    document.getElementById('loginScreen').classList.remove('hidden');
+    showLoginMode();
+}
+
+function canManage(){
+    if(currentUser?.role==='admin') return true;
+    alert('Access denied. Admin permission is required.');
+    return false;
+}
+
+function hideAllAuthForms(){
+    ['loginForm','registerForm','adminSetupForm'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+}
+function clearAuthMessages(){
+    document.getElementById('loginError').textContent='';
+    document.getElementById('authMessage').textContent='';
+}
+function updateAuthUI(){
+    const hasAdmin=hasAdminAccount();
+    const setupSwitch=document.getElementById('adminSetupSwitch');
+    const info=document.getElementById('authInfo');
+    if(!hasAdmin){
+        setupSwitch.classList.remove('hidden');
+        info.innerHTML='<b>No Admin account exists yet.</b><br>Create your Admin account first. This becomes the main administrator for this system.<br><small>No demo username or password is included.</small>';
+    } else {
+        setupSwitch.classList.add('hidden');
+        info.innerHTML='<b>Account access:</b><br>Login with an account you created. New users can register below.<br><small>Admins can create additional accounts after login.</small>';
+    }
+}
+function showLoginMode(){
+    hideAllAuthForms();
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('authTitle').textContent='Hospital Management System';
+    document.getElementById('authSwitch').textContent='New user? Register here';
+    document.getElementById('authSwitch').classList.remove('hidden');
+    clearAuthMessages();
+    updateAuthUI();
+}
+function toggleAuthMode(register){
+    const isRegister=typeof register==='boolean' ? register : document.getElementById('registerForm').classList.contains('hidden');
+    clearAuthMessages();
+    hideAllAuthForms();
+    if(isRegister){
+        document.getElementById('registerForm').classList.remove('hidden');
+        document.getElementById('authTitle').textContent='Create User Account';
+        document.getElementById('authSwitch').textContent='Already have an account? Login here';
+        document.getElementById('authSwitch').classList.remove('hidden');
+        document.getElementById('adminSetupSwitch').classList.add('hidden');
+    } else showLoginMode();
+}
+function showAdminSetup(){
+    clearAuthMessages();
+    hideAllAuthForms();
+    document.getElementById('adminSetupForm').classList.remove('hidden');
+    document.getElementById('authTitle').textContent='Create Admin Account';
+    document.getElementById('authSwitch').textContent='Back to Login';
+    document.getElementById('authSwitch').classList.remove('hidden');
+    document.getElementById('adminSetupSwitch').classList.add('hidden');
+    document.getElementById('authInfo').innerHTML='<b>First Admin setup</b><br>Choose your own username and password. No default Admin credentials are provided.';
+}
+
+function validateUsername(username){
+    return /^[a-z0-9_.-]{3,20}$/.test(username);
+}
+function usernameError(){
+    return 'Username must be 3–20 characters using letters, numbers, ., _, or -.';
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    removeLegacyDemoAccounts();
+    updateAuthUI();
+    const saved=JSON.parse(localStorage.getItem('medicareSession')||'null');
+    if(saved){ currentUser=saved; applyUserRole(); document.getElementById('loginScreen').classList.add('hidden'); }
+
+    document.getElementById('loginForm').addEventListener('submit',e=>{
+        e.preventDefault();
+        const u=document.getElementById('loginUsername').value.trim().toLowerCase();
+        const p=document.getElementById('loginPassword').value;
+        const r=document.getElementById('loginRole').value;
+        const account=getUsers()[u];
+        if(account && account.username.toLowerCase()===u && account.password===p && account.role===r){
+            startSession(account);
+        } else {
+            document.getElementById('loginError').textContent='Invalid username, password, or role.';
+        }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit',e=>{
+        e.preventDefault();
+        const name=document.getElementById('regName').value.trim();
+        const username=document.getElementById('regUsername').value.trim().toLowerCase();
+        const password=document.getElementById('regPassword').value;
+        const confirm=document.getElementById('regConfirmPassword').value;
+        if(!validateUsername(username)){ document.getElementById('loginError').textContent=usernameError(); return; }
+        if(password.length<6){ document.getElementById('loginError').textContent='Password must be at least 6 characters.'; return; }
+        if(password!==confirm){ document.getElementById('loginError').textContent='Passwords do not match.'; return; }
+        const users=getUsers();
+        if(users[username]){ document.getElementById('loginError').textContent='Username already exists.'; return; }
+        users[username]={username,password,name,role:'user',createdBy:'self'};
+        saveStoredUsers(users);
+        document.getElementById('registerForm').reset();
+        document.getElementById('authMessage').textContent='User account created successfully. Please login.';
+        document.getElementById('loginUsername').value=username;
+        setTimeout(showLoginMode, 350);
+    });
+
+    document.getElementById('adminSetupForm').addEventListener('submit',e=>{
+        e.preventDefault();
+        if(hasAdminAccount()){ document.getElementById('loginError').textContent='An Admin account already exists. Please login as Admin.'; showLoginMode(); return; }
+        const name=document.getElementById('adminName').value.trim();
+        const username=document.getElementById('adminUsername').value.trim().toLowerCase();
+        const password=document.getElementById('adminPassword').value;
+        const confirm=document.getElementById('adminConfirmPassword').value;
+        if(!validateUsername(username)){ document.getElementById('loginError').textContent=usernameError(); return; }
+        if(password.length<6){ document.getElementById('loginError').textContent='Password must be at least 6 characters.'; return; }
+        if(password!==confirm){ document.getElementById('loginError').textContent='Passwords do not match.'; return; }
+        const users=getUsers();
+        if(users[username]){ document.getElementById('loginError').textContent='Username already exists.'; return; }
+        users[username]={username,password,name,role:'admin',createdBy:'first-admin-setup'};
+        saveStoredUsers(users);
+        document.getElementById('adminSetupForm').reset();
+        document.getElementById('authMessage').textContent='Admin account created successfully. You can now login.';
+        document.getElementById('loginUsername').value=username;
+        setTimeout(showLoginMode, 350);
+    });
+});
+
 /* =====================================================
    DATA
 ===================================================== */
@@ -2030,6 +2276,7 @@ function saveData() {
 ===================================================== */
 
 function showSection(sectionId, element) {
+    if (currentUser?.role === "user" && ["billing","pharmacy","staff"].includes(sectionId)) { alert("Access denied for User account."); return; }
 
     document.querySelectorAll(".section").forEach(section => {
         section.classList.remove("active");
@@ -2101,6 +2348,23 @@ function updateDashboard() {
 
     document.getElementById("totalRevenue").textContent =
         "₹" + revenue.toLocaleString("en-IN");
+
+    // Admin dashboard statistics
+    const admitted = patients.filter(p => p.status === "Admitted").length;
+    const active = patients.filter(p => p.status === "Active" || p.status === "Admitted").length;
+    const available = doctors.filter(d => d.status === "Available").length;
+    const pending = bills.filter(b => b.status === "Pending");
+    const paid = bills.filter(b => b.status === "Paid").reduce((t,b)=>t+Number(b.amount||0),0);
+    const outstanding = pending.reduce((t,b)=>t+Number(b.amount||0),0);
+    const stock = medicines.reduce((t,m)=>t+Number(m.stock||0),0);
+    const lowStock = medicines.filter(m=>Number(m.stock||0)<10).length;
+    const today = new Date().toISOString().split("T")[0];
+    const todayCount = appointments.filter(a=>a.date===today).length;
+    const setStat=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val;};
+    setStat("admittedPatients",admitted); setStat("availableDoctors",available); setStat("pendingBills",pending.length); setStat("medicineStock",stock);
+    setStat("paidRevenue","₹"+paid.toLocaleString("en-IN")); setStat("outstandingRevenue","₹"+outstanding.toLocaleString("en-IN"));
+    setStat("collectionRate", revenue ? Math.round((paid/revenue)*100)+"%" : "0%"); setStat("activePatients",active); setStat("todayAppointments",todayCount); setStat("lowStockMedicines",lowStock);
+    setStat("adminStatsDate",new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"}));
 
 
     const patientHTML = patients
@@ -2240,6 +2504,7 @@ function renderPatients(data = patients) {
 
 
 function openPatientModal() {
+    if (!canManage()) return;
 
     editingPatientId = null;
 
@@ -2346,6 +2611,7 @@ function addPatient(event) {
 
 
 function deletePatient(id) {
+    if (!canManage()) return;
 
     if (!confirm("Are you sure you want to delete this patient?")) {
         return;
@@ -2363,6 +2629,7 @@ function deletePatient(id) {
 let editingPatientId = null;
 
 function editPatient(id) {
+    if (!canManage()) return;
 
     const patient = patients.find(p => p.id === id);
 
@@ -2448,6 +2715,7 @@ function renderDoctors(data = doctors) {
 
 
 function openDoctorModal() {
+    if (!canManage()) return;
 
     editingDoctorId = null;
 
@@ -2539,6 +2807,7 @@ function addDoctor(event) {
 
 
 function deleteDoctor(id) {
+    if (!canManage()) return;
 
     if (!confirm("Delete this doctor?")) return;
 
@@ -2611,6 +2880,7 @@ function renderAppointments(data = appointments) {
 
 
 function openAppointmentModal() {
+    if (!canManage()) return;
 
     editingAppointmentId = null;
 
@@ -2734,6 +3004,7 @@ function addAppointment(event) {
 
 
 function deleteAppointment(id) {
+    if (!canManage()) return;
 
     if (!confirm("Delete appointment?")) return;
 
@@ -2809,6 +3080,7 @@ function renderBills() {
 
 
 function openBillingModal() {
+    if (!canManage()) return;
 
     editingBillId = null;
 
@@ -2906,6 +3178,7 @@ function addBilling(event) {
 
 
 function deleteBill(id) {
+    if (!canManage()) return;
 
     if (!confirm("Delete invoice?")) return;
 
@@ -2985,6 +3258,7 @@ function renderMedicines(data = medicines) {
 
 
 function openMedicineModal() {
+    if (!canManage()) return;
 
     editingMedicineId = null;
 
@@ -3077,6 +3351,7 @@ function addMedicine(event) {
 
 
 function deleteMedicine(id) {
+    if (!canManage()) return;
 
     if (!confirm("Delete medicine?")) return;
 
@@ -3148,6 +3423,7 @@ function renderStaff() {
 
 
 function openStaffModal() {
+    if (!canManage()) return;
 
     editingStaffId = null;
 
@@ -3240,6 +3516,7 @@ function addStaff(event) {
 
 
 function deleteStaff(id) {
+    if (!canManage()) return;
 
     if (!confirm("Delete staff member?")) return;
 
@@ -3415,6 +3692,7 @@ restoreSession();
 let editingDoctorId = null;
 
 function editDoctor(id) {
+    if (!canManage()) return;
 
     const doctor = doctors.find(d => d.id === id);
 
@@ -3439,6 +3717,7 @@ function editDoctor(id) {
 let editingAppointmentId = null;
 
 function editAppointment(id) {
+    if (!canManage()) return;
 
     const app = appointments.find(a => a.id === id);
 
@@ -3488,6 +3767,7 @@ function editAppointment(id) {
 let editingBillId = null;
 
 function editBill(id) {
+    if (!canManage()) return;
 
     const bill = bills.find(b => b.id === id);
 
@@ -3528,6 +3808,7 @@ function editBill(id) {
 let editingMedicineId = null;
 
 function editMedicine(id) {
+    if (!canManage()) return;
 
     const medicine = medicines.find(
         m => m.id === id
@@ -3564,6 +3845,7 @@ function editMedicine(id) {
 let editingStaffId = null;
 
 function editStaff(id) {
+    if (!canManage()) return;
 
     const member = staff.find(
         s => s.id === id
