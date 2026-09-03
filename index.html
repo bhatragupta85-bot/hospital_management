@@ -423,6 +423,187 @@
             color: #94a3b8;
         }
 
+
+
+        /* AUTHENTICATION */
+        body.logged-out .sidebar,
+        body.logged-out .main {
+            display: none !important;
+        }
+
+        #authScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: linear-gradient(135deg, #ecfeff, #f0fdfa 45%, #f8fafc);
+        }
+
+        body.logged-in #authScreen {
+            display: none;
+        }
+
+        .auth-card {
+            width: 460px;
+            max-width: 100%;
+            background: #fff;
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(15, 118, 110, 0.14);
+            border: 1px solid #e5e7eb;
+        }
+
+        .auth-brand {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-brand-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px;
+            border-radius: 16px;
+            background: #0f766e;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 31px;
+            font-weight: 700;
+        }
+
+        .auth-brand h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+            color: #0f172a;
+        }
+
+        .auth-brand p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+        }
+
+        .auth-tab {
+            border: 0;
+            background: transparent;
+            padding: 11px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .auth-tab.active {
+            background: #fff;
+            color: #0f766e;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-field {
+            margin-bottom: 15px;
+        }
+
+        .auth-field label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .auth-field input,
+        .auth-field select {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+
+        .auth-field input:focus,
+        .auth-field select:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15,118,110,0.10);
+        }
+
+        .auth-button {
+            width: 100%;
+            margin-top: 5px;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: #0f766e;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .auth-button:hover {
+            background: #115e59;
+        }
+
+        .auth-message {
+            min-height: 20px;
+            margin: 0 0 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .auth-message.error {
+            color: #b91c1c;
+        }
+
+        .auth-message.success {
+            color: #15803d;
+        }
+
+        .auth-note {
+            margin-top: 14px;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .logout-btn {
+            border: 0;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        @media (max-width: 500px) {
+            .auth-card {
+                padding: 22px;
+            }
+        }
+
         /* MOBILE */
         .mobile-menu {
             display: none;
@@ -500,7 +681,67 @@
     </style>
 </head>
 
-<body>
+<body class="logged-out">
+
+<!-- AUTHENTICATION -->
+<section id="authScreen">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <div class="auth-brand-icon">+</div>
+            <h1>MediCare Hospital</h1>
+            <p>Hospital Management System</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button type="button" class="auth-tab active" id="loginTab" onclick="showAuthForm('login')">Login</button>
+            <button type="button" class="auth-tab" id="registerTab" onclick="showAuthForm('register')">Register Here</button>
+        </div>
+
+        <div id="authMessage" class="auth-message"></div>
+
+        <form id="loginForm" class="auth-form active" onsubmit="loginUser(event)">
+            <div class="auth-field">
+                <label for="loginIdentity">Username or Email</label>
+                <input type="text" id="loginIdentity" autocomplete="username" required>
+            </div>
+            <div class="auth-field">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="auth-button">Login</button>
+            <div class="auth-note">Need an admin account? Click <strong>Register Here</strong> to create one.</div>
+        </form>
+
+        <form id="registerForm" class="auth-form" onsubmit="registerUser(event)">
+            <div class="auth-field">
+                <label for="registerName">Full Name</label>
+                <input type="text" id="registerName" autocomplete="name" required>
+            </div>
+            <div class="auth-field">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" autocomplete="email" required>
+            </div>
+            <div class="auth-field">
+                <label for="registerUsername">Username</label>
+                <input type="text" id="registerUsername" minlength="3" maxlength="30" autocomplete="username" required>
+            </div>
+            <div class="auth-field">
+                <input type="hidden" id="registerRole" value="admin">
+            </div>
+            <div class="auth-field">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" minlength="6" autocomplete="new-password" required>
+            </div>
+            <div class="auth-field">
+                <label for="registerConfirmPassword">Confirm Password</label>
+                <input type="password" id="registerConfirmPassword" minlength="6" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="auth-button">Create Account</button>
+            <div class="auth-note">No demo account is created. Your account is stored locally in this browser.</div>
+        </form>
+    </div>
+</section>
+
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
@@ -574,8 +815,11 @@
             <div class="notification" onclick="showNotification()">🔔</div>
 
             <div class="profile">
-                <div class="avatar">AD</div>
-                <span>Admin</span>
+                <div class="avatar" id="profileAvatar">--</div>
+                <span id="profileName">Guest</span>
+                <span id="profileRole" style="font-size:12px;color:#64748b;">
+                    </span>
+                <button class="logout-btn" onclick="logoutUser()">Logout</button>
             </div>
         </div>
 
@@ -1582,6 +1826,187 @@ let staff = JSON.parse(localStorage.getItem("staff")) || [
         status: "Active"
     }
 ];
+
+
+/* =====================================================
+   AUTHENTICATION
+===================================================== */
+
+let authUsers = (JSON.parse(localStorage.getItem("medicareUsers")) || []).filter(account => account.role === "admin");
+
+function saveAuthUsers() {
+    localStorage.setItem("medicareUsers", JSON.stringify(authUsers));
+}
+
+function setAuthMessage(message, type = "error") {
+    const box = document.getElementById("authMessage");
+    box.textContent = message;
+    box.className = "auth-message " + type;
+}
+
+function clearAuthMessage() {
+    const box = document.getElementById("authMessage");
+    box.textContent = "";
+    box.className = "auth-message";
+}
+
+function showAuthForm(formName) {
+    const isLogin = formName === "login";
+
+    document.getElementById("loginForm").classList.toggle("active", isLogin);
+    document.getElementById("registerForm").classList.toggle("active", !isLogin);
+    document.getElementById("loginTab").classList.toggle("active", isLogin);
+    document.getElementById("registerTab").classList.toggle("active", !isLogin);
+
+    clearAuthMessage();
+}
+
+function registerUser(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("registerName").value.trim();
+    const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+    const username = document.getElementById("registerUsername").value.trim();
+    const role = "admin";
+    const password = document.getElementById("registerPassword").value;
+    const confirmPassword = document.getElementById("registerConfirmPassword").value;
+
+    if (!name || !email || !username || !password || !confirmPassword) {
+        setAuthMessage("Please fill in all registration fields.");
+        return;
+    }
+
+    if (!/^[A-Za-z0-9._-]{3,30}$/.test(username)) {
+        setAuthMessage("Username must be 3-30 characters and use only letters, numbers, dot, underscore or hyphen.");
+        return;
+    }
+
+    if (password.length < 6) {
+        setAuthMessage("Password must be at least 6 characters.");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        setAuthMessage("Passwords do not match.");
+        return;
+    }
+
+    const duplicate = authUsers.some(user =>
+        user.username.toLowerCase() === username.toLowerCase() ||
+        user.email.toLowerCase() === email
+    );
+
+    if (duplicate) {
+        setAuthMessage("An account with this username or email already exists.");
+        return;
+    }
+
+    const newUser = {
+        id: "U" + Date.now(),
+        name,
+        email,
+        username,
+        password,
+        role
+    };
+
+    authUsers.push(newUser);
+    saveAuthUsers();
+    localStorage.setItem("medicareSession", JSON.stringify({
+        id: newUser.id,
+        name: newUser.name,
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role
+    }));
+
+    event.target.reset();
+    setAuthMessage("Account created successfully. Opening your dashboard...", "success");
+
+    enterApplication(newUser);
+}
+
+function loginUser(event) {
+    event.preventDefault();
+
+    const identity = document.getElementById("loginIdentity").value.trim().toLowerCase();
+    const password = document.getElementById("loginPassword").value;
+
+    if (!identity || !password) {
+        setAuthMessage("Enter your username/email and password.");
+        return;
+    }
+
+    const user = authUsers.find(account =>
+        account.role === "admin" &&
+        (account.username.toLowerCase() === identity || account.email.toLowerCase() === identity) &&
+        account.password === password
+    );
+
+    if (!user) {
+        setAuthMessage("Invalid username/email or password.");
+        return;
+    }
+
+    localStorage.setItem("medicareSession", JSON.stringify({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        role: user.role
+    }));
+
+    event.target.reset();
+    enterApplication(user);
+}
+
+function enterApplication(user) {
+    document.body.classList.remove("logged-out");
+    document.body.classList.add("logged-in");
+
+    const initials = user.name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(part => part[0].toUpperCase())
+        .join("") || "U";
+
+    document.getElementById("profileAvatar").textContent = initials;
+    document.getElementById("profileName").textContent = user.name;
+    document.getElementById("profileRole").textContent = "(Admin)";
+    document.getElementById("pageTitle").textContent = "Dashboard";
+
+    updateDashboard();
+}
+
+function logoutUser() {
+    localStorage.removeItem("medicareSession");
+    document.body.classList.remove("logged-in");
+    document.body.classList.add("logged-out");
+    document.getElementById("loginIdentity").value = "";
+    document.getElementById("loginPassword").value = "";
+    showAuthForm("login");
+    setAuthMessage("You have been logged out.", "success");
+}
+
+function restoreSession() {
+    const session = JSON.parse(localStorage.getItem("medicareSession"));
+
+    if (!session) {
+        document.body.classList.add("logged-out");
+        return;
+    }
+
+    const user = authUsers.find(account => account.id === session.id);
+
+    if (!user) {
+        localStorage.removeItem("medicareSession");
+        document.body.classList.add("logged-out");
+        return;
+    }
+
+    enterApplication(user);
+}
 
 
 /* =====================================================
@@ -2984,6 +3409,7 @@ function init() {
 
 
 init();
+restoreSession();
 
 
 let editingDoctorId = null;
